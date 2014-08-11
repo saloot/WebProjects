@@ -1,0 +1,41 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+
+
+
+<div style="width:500px; margin:150px auto 50px auto;">            
+    <h1 style="font-family: fantasy; font-size: 3em;">Chef <a href="/_chef?u=saloot">{{chef_id}}</a>'s Reviews</h1>
+    <h2 style="font-family: fantasy; font-size: 2em;margin-left:50px;">{{chef_rating|safe}}</h2>    
+</div>
+<div class="container marketing">
+    
+<div style="float:left;margin-left:15px;margin-right:15px;font-family:fantasy; font-size: 1em;width:130px;border:dashed 1px;border-radius: 5px;padding: 5px 5px 5px 5px;text-align:center;">
+    <div><a href="./_reviews_chef?u={{chef_id}}&s=5">5 star</a> <progress style="-webkit-appearance: none;appearance: none;width:80px;" value="{{star5_percent}}" max="{{no_reviews}}"></progress></div>
+    <div><a href="./_reviews_chef?u={{chef_id}}&s=4">4 star</a> <progress style="-webkit-appearance: none;appearance: none;width:80px;" value="{{star4_percent}}" max="{{no_reviews}}"></progress></div>
+    <div><a href="./_reviews_chef?u={{chef_id}}&s=3">3 star</a> <progress style="-webkit-appearance: none;appearance: none;width:80px;" value="{{star3_percent}}" max="{{no_reviews}}"></progress></div>
+    <div><a href="./_reviews_chef?u={{chef_id}}&s=2">2 star</a> <progress style="-webkit-appearance: none;appearance: none;width:80px;" value="{{star2_percent}}" max="{{no_reviews}}"></progress></div>
+    <div><a href="./_reviews_chef?u={{chef_id}}&s=1">1 star</a> <progress style="-webkit-appearance: none;appearance: none;width:80px;" value="{{star1_percent}}" max="{{no_reviews}}"></progress></div>
+</div>
+
+
+    
+    <div style="float:left;width:80%">
+        <table class="table table-striped" style="font-family:fantasy; font-size: 1.2em;">        
+            {% for review in review_list%}
+            <tr style="height:70px;">                
+               <td style="vertical-align: middle;width:10%;">{{review.2|safe}}</td>
+               <td style="vertical-align: middle;width:5%;">{{review.1|safe}}</td>
+               <td style="vertical-align: middle;width:40%;">{{review.0|safe}}</td>        
+           </tr>
+
+            {% endfor %}
+        </table>
+      </div>
+    </div>
+
+
+  </body>
+</html>
+{% endblock %}
+

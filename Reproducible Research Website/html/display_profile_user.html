@@ -1,0 +1,91 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+{% if profile_edited %}
+<div class="container marketing" style="margin-top:80px;">	
+	<div class="span6" style="padding-right:-20px; margin-bottom: 100px;">	
+		<h3 style="font-family: 'Varela Round', sans-serif;margin-left:0px;margin-bottom: 20px;">Your profile details:</h3>
+		<div class="control-group" style="height:30px;">
+			<label class="control-label" for="first_name_input" style="font-family: 'Raleway', sans-serif;float:left;margin-right: 10px;">First name:</label>
+			<label class="control-label" for="first_name_input" style="font-family: 'Oxygen', sans-serif;">{{first_name_value}}</label>
+		</div>
+		
+		
+		<div class="control-group" style="height:30px;">
+			<label class="control-label" style="font-family: 'Raleway', sans-serif;float:left;margin-right: 10px;">Last name:</label>
+			<label class="control-label" style="font-family: 'Oxygen', sans-serif;">{{last_name_value}}</label>
+		</div>
+		
+			
+				
+		<div class="control-group" style="height:30px;">
+			<label class="control-label" style="font-family: 'Raleway', sans-serif;float:left;margin-right: 10px;">Email:</label>
+			<label class="control-label" style="font-family: 'Oxygen', sans-serif;">{{email_value}}</label>
+		</div>
+		
+		<div class="control-group" style="height:30px;">
+			<label class="control-label" style="font-family: 'Raleway', sans-serif;float:left;margin-right: 10px;">Personal Page:</label>
+			<label class="control-label" style="font-family: 'Oxygen', sans-serif;"><a href="{{web_link_value}}">{{web_link_value}}</a></label>
+		</div>
+		
+		<div class="control-group" style="height:30px;">
+			<label class="control-label" style="font-family: 'Raleway', sans-serif;float:left;margin-right: 10px;">Address:</label>
+			<label class="control-label" style="font-family: 'Oxygen', sans-serif;">{{address_value}}</label>
+		</div>
+		
+		<div class="control-group" style="height:30px;">
+			<label class="control-label" style="font-family: 'Raleway', sans-serif;float:left;margin-right: 10px;">Published papers:</label>
+			<label class="control-label" style="font-family: 'Oxygen', sans-serif;"><a href="/_author?a={{author_id}}">{{author_id}}</a></label>
+		</div>
+		
+		<div class="control-group" style="height:30px;">
+			<label class="control-label" for="first_name_input" style="font-family: 'Raleway', sans-serif;margin-right: 10px;">Biography</label>
+			<label class="control-label" for="first_name_input" style="font-family: 'Oxygen', sans-serif;">{{biography_value}}</label>
+		</div>
+	</div>
+
+		
+	<div class="span5" style="margin-bottom: 100px;margin-top: 30px;">	
+		<h3 style="font-family: 'Raleway', sans-serif;margin-left:0px;margin-bottom: 10px;">Photo</h3>
+		<img src="/_image?k={{image_key}}" style="height:300px;width:240px;" onerror="this.src ='http://allaboutuarts.ca/wp-content/uploads/2012/07/placeholder_2.jpg';">
+	</div>	
+</div>	
+
+<div class="container marketing" style="margin-top:20px;">
+	<div class="span6" >
+		<div class="control-group" style="height:30px;">
+			<a href="/_editprofile" style="float: left; margin-right: 20px;">
+				<button class="btn btn-primary" style="width:200px;font-size:20px;height:40px;font-family: 'Oxygen', sans-serif;">Edit Profile</button>
+			</a>
+		
+			<a href="/_changepassword" style="float: left;">
+				<button class="btn btn-success" style="width:200px;font-size:20px;height:40px;font-family: 'Oxygen', sans-serif;">Change Password</button>
+			</a>
+		</div>
+	</div>
+</div>
+{% else %}
+<div class="container marketing" style="margin-top:80px;">
+	<div class="span6" style="padding-right:-20px; margin-bottom: 0px;">	
+		<h3 style="font-family: 'Varela Round', sans-serif;margin-left:0px;margin-bottom: 20px;">You haven't created your profile yet!</h3>
+	</div>
+</div>
+<div class="container marketing" style="margin-top:20px;">
+	
+	<div class="span6">
+		<div class="control-group" style="height:30px;">
+			<a href="/_editprofile" style="float: left; margin-right: 20px;">
+				<button class="btn btn-primary" style="width:200px;font-size:20px;height:40px;font-family: 'Oxygen', sans-serif;">Create Profile!</button>
+			</a>
+			
+			<a href="/_changepassword" style="float: left;">
+				<button class="btn btn-success" style="width:200px;font-size:20px;height:40px;font-family: 'Oxygen', sans-serif;">Change Password</button>
+			</a>
+		</div>
+	</div>
+</div>
+{% endif %}
+<div class="container marketing" style="margin-top:20px;">
+	
+</div>
+{% endblock %}

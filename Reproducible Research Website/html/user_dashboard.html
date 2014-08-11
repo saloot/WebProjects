@@ -1,0 +1,159 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+<div class="container marketing" style="margin-top:20px;">
+    <h1 style="font-family: 'Varela Round', sans-serif; font-size: 3em;">Welcome {{userid}}</h1>
+</div>
+    
+<div class="container marketing">
+    {% if is_author %}
+        <div style="width:48%;float:right;">
+            <h2 style="font-family: 'Raleway', sans-serif; font-size: 2em;"><span style="font-size: .75em">Here are your most popular papers</span></h2>
+            <h4 style="font-family: 'Raleway', sans-serif;font-size: 0.85em;">Sort based on: <a href="/dashboard?v=views">Views</a>|<a href="/dashboard?v=pdf">PDF Downloads</a>|<a href="/dashboard?v=code">Code Downloads</a>|<a href="/dashboard?v=data">Data Downloads</a>|<a href="/dashboard?v=demo">Demo Views</a></h4>
+            <table class="table table">
+                <tr>
+                    <td style="vertical-align: middle;">Paper</td>                    
+                    {% if no_views_flag %}
+                        <td style="text-align:center;">#Views</td>
+                    {% endif %}
+                    {% if no_code_flag %}
+                        <td style="text-align:center;">#Code Downloads</td>
+                    {% endif %}
+                    {% if no_data_flag %}
+                        <td style="text-align:center;">#Data Downloads</td>
+                    {% endif %}
+                    {% if no_demo_flag %}
+                        <td style="text-align:center;">#Demo Views</td>
+                    {% endif %}
+                    {% if no_pdf_flag %}
+                        <td style="text-align:center;">#PDF Downloads</td>
+                    {% endif %}
+                </tr>
+                {% for paper in popular_papers_no_view%}
+                    <tr>
+                        <td style="vertical-align: middle;font-size: 1.2em;">
+                            <a href="/_paper?i={{paper.2}}" style="font-family: 'Varela Round', sans-serif;">{{paper.0|safe}}</a>
+                        	<br>
+                            <span style="font-size: 0.75em;font-family: 'Oxygen', sans-serif;">{{paper.3}}</span>
+                        </td>
+                        <!--<td style="vertical-align: middle;font-size:1em;font-family: 'Raleway', sans-serif;text-align:center;">{{paper.1}}</td>-->
+                        <td style="vertical-align: middle;font-size:1em;font-family: 'Raleway', sans-serif;text-align:center;" >{{paper.4}}</td>
+                    </tr>
+                {% endfor %}
+            </table>        
+            
+        </div>
+        
+        <div style="width:40%;">
+            <h2 style="font-family: 'Raleway', sans-serif; font-size: 2em;"><span style="font-size: .75em">Here are your recently added papers</span></h2>
+            <h4 style="font-family: 'Raleway', sans-serif;font-size: 0.85em;"> &nbsp;</h4>
+            <table class="table table">                
+                {% for paper in recently_authored_papers%}
+                    <tr>
+                        <td style="vertical-align: middle;font-size: 1.2em;">
+                            <a href="/_paper?i={{paper.2}}" style="font-family: 'Varela Round', sans-serif;">{{paper.0|safe}}</a>
+                        	<br>
+                            <span style="font-size: 0.75em;font-family: 'Oxygen', sans-serif;">{{paper.3}}</span>
+                        </td>
+                        <td style="vertical-align: middle;font-size:1em;font-family: 'Raleway', sans-serif;">{{paper.1}}</td>                        
+                    </tr>
+                {% endfor %}
+            </table>
+            <h4 style="font-family: 'Raleway', sans-serif;">To see a complete list click <a href="/_author?a={{is_author}}">here</a>.</h4>            
+        </div>
+        
+        
+        <div id="target" style="width: 90%; height: 600px;margin-top: 110px;">
+        </div>
+        
+        
+        <table id="source" hidden>
+		<caption>The Detailed Stats for the 5 Most Polular Papers</caption>
+		<thead>
+			<tr>
+				<th></th>
+                                {% for paper in popular_papers_no_view%}
+				<th>{{paper.0}}</th>
+				{% endfor %}
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Views</th>
+                                {% for paper in popular_papers_no_view%}
+				<td>{{paper.5}}</td>
+				{% endfor %}
+			</tr>
+			<tr>
+				<th>PDF Downloads</th>
+				{% for paper in popular_papers_no_view%}
+				<td>{{paper.6}}</td>
+				{% endfor %}
+			</tr>
+			<tr>
+				<th>Code Downloads</th>
+				{% for paper in popular_papers_no_view%}
+				<td>{{paper.7}}</td>
+				{% endfor %}
+			</tr>
+			<tr>
+				<th>Demo Downloads</th>
+				{% for paper in popular_papers_no_view%}
+				<td>{{paper.9}}</td>
+				{% endfor %}
+			</tr>
+		</tbody>
+	</table>
+        
+    {% else %}
+                <div style="width:40%;float:right;">
+            <h2 style="font-family: 'Raleway', sans-serif; font-size: 2em;"><span style="font-size: .75em">Here are the most popular papers</span></h2>            
+            <table class="table table">
+                {% for paper in recently_added_papers%}
+                    <tr>
+                        <td style="vertical-align: middle;font-size: 1.2em;">
+                            <a href="/_paper?i={{paper.2}}" style="font-family: 'Varela Round', sans-serif;">{{paper.0|safe}}</a>
+                        	<br>
+                            <span style="font-size: 0.75em;font-family: 'Oxygen', sans-serif;">{{paper.3}}</span>
+                        </td>
+                        <td style="vertical-align: middle;font-size:1em;font-family: 'Raleway', sans-serif;">{{paper.1}}</td>
+                    </tr>
+                {% endfor %}
+            </table>        
+            
+        </div>
+        
+        <div style="width:40%;">
+            <h2 style="font-family: 'Raleway', sans-serif; font-size: 2em;"><span style="font-size: .75em">Here are the latest additions to our database</span></h2>            
+            <table class="table table">
+                {% for paper in recently_added_papers%}
+                    <tr>
+                        <td style="vertical-align: middle;font-size: 1.2em;">
+                            <a href="/_paper?i={{paper.2}}" style="font-family: 'Varela Round', sans-serif;">{{paper.0|safe}}</a>
+                        	<br>
+                            <span style="font-size: 0.75em;font-family: 'Oxygen', sans-serif;">{{paper.3}}</span>
+                        </td>
+                        <td style="vertical-align: middle;font-size:1em;font-family: 'Raleway', sans-serif;">{{paper.1}}</td>
+                    </tr>
+                {% endfor %}
+            </table>        
+        </div>
+    {% endif %}
+</div>
+
+
+
+
+
+
+    <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $('#source').tableBarChart('#target', '', false);
+    });
+</script>    
+
+
+  </body>
+</html>
+{% endblock %}

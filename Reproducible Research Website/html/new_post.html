@@ -1,0 +1,31 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+	
+	{%if login_first %}
+	<div class="container marketing" style="margin-top:110px;">
+		<div class="span10">
+			<h1 style="font-family: 'Varela Round', sans-serif;"> You must login first to add a paper. <a href= "/login">Click here!</a></h1>
+			
+		</div>
+	</div>
+	{% else %}
+	<div class="container marketing" style="margin-top:110px;">
+		<div class="span10">
+			<h1 style="font-family: 'Varela Round', sans-serif;"> The paper's title </h1>
+			<form method="post" enctype="multipart/form-data" class="form-horizontal">
+				<input type="text" name="paper_title" style="width:75%;margin-right:10px;height:30px;" value={{paper_title_value}} >
+				
+				<button type="submit" class="btn btn-primary" style="width:100px;font-size:20px;height:40px;">Go!</button>
+				
+				<div style="color: red">{{error_title}}</div>
+			</form>
+		</div>
+	</div>
+	{% endif %}
+	
+    
+   
+
+</body>
+  {% endblock %}

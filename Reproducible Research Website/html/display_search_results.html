@@ -1,0 +1,45 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+
+
+{% if not paper_list %}
+    <div style="width:80%; margin:150px auto 50px auto;">            
+        <h1 style="font-family: 'Varela Round', sans-serif; font-size: 2.5em;margin-left: 40px;margin-top:50px;">Sorry! We could not find any papers matching your query.</h1>
+    </div>
+    {% else %}
+<div style="width:80%; margin:150px auto 50px auto;">            
+    <h1 style="font-family: 'Varela Round', sans-serif; font-size: 3em;">The followjng results matches your query</h1>    
+</div>
+
+
+<div class="container marketing" style="margin-top: 40px;margin-left: 100px;">   
+    <div class="row" style="margin-left: 40px;margin-top:15px;">
+        <table class="table table-striped">
+            <tr style="height:50px;">
+                <td style="vertical-align: middle;font-size: 1.5em;font-family: 'Raleway', sans-serif;">Title</td>        
+                <td style="vertical-align: middle;font-size: 1.5em;font-family: 'Raleway', sans-serif;">Date</td>
+            </tr>    
+        
+        
+            {% for paper in papers_list%}
+                <tr>
+                    <td style="vertical-align: middle;font-size: 1.4em;">
+                        <a href="/_paper?i={{paper.3}}" style="font-family: 'Varela Round', sans-serif;">{{paper.0|safe}}</a>
+                        <br>
+                        <span style="font-size: 0.75em;font-family: 'Oxygen', sans-serif;">{{paper.1}}</span>
+                    </td>
+                    <td style="vertical-align: middle;font-size:1.2em;font-family: 'Raleway', sans-serif;">{{paper.2}}</td>
+                    
+              </tr>
+            {% endfor %}
+        </table>        
+    </div>
+</div>
+{%endif%}
+
+
+
+  </body>
+</html>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+	
+    <!-- ======================Food list======================== -->
+	<div class="container marketing" >
+		<form method="post" >
+			<div style="width:90%; margin:165px auto 20px auto;">
+				
+				<h1 style="font-family: 'Varela Round', sans-serif;margin-bottom:25px;margin-left:10%;">Looking for something?</h1>
+				
+				<div class="row-desktop" style="margin-left:10%;">									
+						<input type="text" name="search_filed" id="search_query" placeholder="Title, author, etc." value="{{search_filed_value}}" style="font-family: 'Raleway', sans-serif;;width:80%;height:40px;font-size:1.5em">
+						
+				
+				
+					<button type="submit" class="btn btn-primary btn-large"
+						style="width:120px;height:50px;text-align: center;font-size: 1.5em;
+						margin-left:0px;text-align: center;margin-top: -10px;font-family: 'Raleway', sans-serif;">Search
+					</button>
+					<div style="display: inline-block;color:red;margin-left:5px;font-size:16px;">{{error_search}}</div>
+				</div>
+			</div>			    
+		</form>
+		
+    
+	<div class="container marketing" >
+		<div style="width:70%; margin:65px auto 20px auto;">
+			<h2 style="font-family: 'Varela Round', sans-serif;margin-bottom:25px;margin-left:1%;">Recent updates</h1>
+			<table class="table table">
+            
+        
+			{% for paper in papers_list%}
+			    <tr>
+			        <td style="vertical-align: middle;font-size: 1.4em;">
+			            <a href="/_paper?i={{paper.2}}" style="font-family: 'Varela Round', sans-serif;">{{paper.0|safe}}</a>
+			            <br>
+			            <span style="font-size: 0.75em;font-family: 'Oxygen', sans-serif;">{{paper.3}}</span>
+			        </td>
+			        <td style="vertical-align: middle;font-size:1.2em;font-family: 'Raleway', sans-serif;">{{paper.1}}</td>
+		        
+			  </tr>
+			{% endfor %}
+			</table>        
+		</div>
+	</div>
+		    
+		
+				
+			
+	
+        
+	 
+	  </body>
+</html>
+{% endblock %}
+

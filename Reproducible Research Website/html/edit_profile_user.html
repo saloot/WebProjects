@@ -1,0 +1,119 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+<form class="form-horizontal" enctype="multipart/form-data" method="post">
+    
+    <div class="container marketing" style="margin-top:80px;">
+	<div class="span6" style="padding-right:-20px; margin-bottom: 100px;">	
+	    <h3 style="font-family: 'Varela Round', sans-serif;margin-left:60px;margin-bottom: 40px;">Your profile details:</h3>
+	    <div class="control-group" style="height:30px;">
+		<label class="control-label" for="first_name_input" style="font-family: 'Raleway', sans-serif;">First name</label>
+                <div class="controls">
+    		    <input type="text" name="first_name" id="first_name_input" placeholder="First name" value="{{first_name_value}}">
+	    	<label style="display: inline-block;color:red;margin-left:5px;font-size:16px;">{{error_first_name}}</label>
+                </div>
+	    </div>
+	    
+            <div class="control-group" style="height:30px;">
+		<label class="control-label" for="last_name_input" style="font-family: 'Raleway', sans-serif;">Last name</label>
+		<div class="controls" >
+		    <input type="text" name="last_name" id="last_name_input" placeholder="Last name" value="{{last_name_value}}">
+		    <label style="display: inline-block;color:red;margin-left:5px;font-size:16px;">{{error_last_name}}</label>
+		</div>
+            </div>
+		    
+            <div class="control-group" style="height:30px;">
+		<label class="control-label" for="postAddress" style="font-family: 'Raleway', sans-serif;">Address</label>
+		<div class="controls">
+		    <input type="text" name="postal_address" id="postAddress" placeholder="Postall address" value="{{postal_address_value}}">
+		    <label style="display: inline-block;color:red;margin-left:5px;font-size:16px;">{{error_postal_address}}</label>
+		</div>
+            </div>
+			
+            <div class="control-group" style="height:30px;">
+                <label class="control-label" for="inputEmail" style="font-family: 'Raleway', sans-serif;">Email</label>
+                <div class="controls">
+                    <input type="text" name="email" id="inputEmail" placeholder="user@example.com" value={{email_value}}>
+                    <label style="display: inline-block;color:red;margin-left:5px;font-size:16px;">{{error_email}}</label>
+                </div>
+            </div>
+			
+	    <div class="control-group" style="height:30px;font-family: 'Raleway', sans-serif;">
+		<label class="control-label" for="inputWeblink">Personal webpage</label>
+		<div class="controls">
+		    <input type="text" name="web_link_add" id="inputWeblink" placeholder="http://examplepage.com" value={{web_link_value}}>
+		    <label style="display: inline-block;color:red;margin-left:5px;font-size:16px;">{{error_weblink}}</label>
+		</div>
+	    </div>
+			
+	    <div class="control-group" style="height:30px;font-family: 'Raleway', sans-serif;">
+		<label class="control-label" for="user_bio">Biography</label>                                
+		<div class="controls">
+		    <textarea rows="10" style="width:180%" name="user_biography" id="user_bio">{{biography_value}}</textarea>					
+		    <label style="display: inline-block;color:red;margin-left:5px;font-size:16px;">{{error_biography}}</label>
+    		</div>
+	    </div>
+	</div>		
+
+        <div class="span5" style="margin-bottom: 100px;margin-top: 30px;">	
+            <h3 style="font-family: 'Raleway', sans-serif;margin-left:0px;margin-bottom: 10px;">Photo</h3>
+                
+            <div class= "row" style="float:left;padding-right:10px;">
+                <div class="fileupload fileupload-new" data-provides="fileupload">
+                    <div class="fileupload-new thumbnail" style="width: 300px; height: 180px;">
+                        <img src="/_image?k={{image_key}}" onerror="this.src ='http://allaboutuarts.ca/wp-content/uploads/2012/07/placeholder_2.jpg';"/>
+                    </div>
+                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 300px; max-height: 180px; line-height: 20px;">
+                    </div>
+		    
+                    <div>
+                        <span class="btn btn-file">
+                            <span class="fileupload-new">Select image</span>
+                            <span class="fileupload-exists">Change</span>
+                            <input type="file" name="user_photo" id="img_files" />
+                        </span>
+                        <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                    </div>
+						
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    {% if ask_author_question %}
+    <div id="modal-question" class="modal">
+        <div class="modal-header">
+            <!--<a href="#" class="close" data-dismiss="modal">x</a>-->
+            <h4 style="font-family: 'Raleway', sans-serif;">We have found an author matching your name.</h4>
+            <h4 style="font-family: 'Raleway', sans-serif;">Is <a href="/_author?a={{author_ID}}" target="_blank">this</a> you?</h4>
+        </div>
+        <div class="modal-body">
+            <div style="float:left;font-family: 'Raleway', sans-serif;"><input type="radio" name="isauthor" value="yes">Yes<br></div>
+            <div style="float:left;font-family: 'Raleway', sans-serif;margin-left: 50px;"><input type="radio" name="isauthor" value="no">No<br></div>        
+        </div>
+        <div class="modal-footer">
+            
+            <button type="submit" class="btn btn-primary" style="width:100px;font-size:20px;height:40px;font-family: 'Raleway', sans-serif;">Submit</button>
+        </div>
+    </div>
+
+    <script>
+        $('#modal-question').modal('show');
+    </script>
+    {%endif %}
+    
+    <div class="container marketing" style="margin-top:120px;">
+	<div class="span6" style="padding-right:-20px; margin-bottom: 100px;">	    
+            <div class="control-group" style="height:30px;">
+		<div class="controls">					
+        	    <button type="submit" class="btn btn-primary" style="width:100px;font-size:20px;height:40px;">Create!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+{% endblock %}

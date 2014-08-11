@@ -1,0 +1,72 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+
+<div class="container marketing" style="margin-top: 40px;">
+    {% if not paper_list %}
+        <h1 style="font-family: 'Varela Round', sans-serif; font-size: 2.5em;margin-left: 40px;margin-top:50px;">Sorry! We could not find any papers matching your query.</h1>
+    {% else %}
+    {% if added_flag %}
+    <h1 style="font-family: 'Varela Round', sans-serif; font-size: 3em;margin-left: 40px">The following papers were added successfully:</h1>
+    {% else %}
+    <h1 style="font-family: 'Varela Round', sans-serif; font-size: 3em;margin-left: 40px">We have found the following papers:</h1>
+    {% endif %}
+
+    <div class="row" style="margin-left: 40px;margin-top:15px;">
+        <form method="post" enctype="multipart/form-data" class="form-horizontal">    
+            <table class="table table-striped">
+                <tr style="height:70px;">
+                    <td style="vertical-align: middle;font-size: 1.5em;font-family: 'Raleway', sans-serif;width:80%;">Title</td>        
+                    <td style="vertical-align: middle;font-size: 1.5em;font-family: 'Raleway', sans-serif;width:8%;">Date</td>
+                    {% if added_flag %}
+                        <td style="vertical-align: middle;font-size: 1.5em;font-family: 'Raleway', sans-serif;width:10%;">Added?</td>
+                    {% else %}
+                        <td style="vertical-align: middle;font-size: 1.5em;font-family: 'Raleway', sans-serif;width:10%;">Yours?</td>
+                    {% endif %}
+                </tr>    
+    
+                
+                {% for paper,paper_sucessflag,addition_error in paper_list%}
+                    <tr>
+                        <td style="vertical-align: middle;font-size: 1.2em;">
+                            {% if paper_sucessflag %}
+                                <a href="/_paper?i={{paper_sucessflag}}" style="font-family: 'Varela Round', sans-serif;">{{paper.0}}</a>
+                            {% else %}
+                                <a href="{{paper.3}}" style="font-family: 'Varela Round', sans-serif;">{{paper.0}}</a>
+                            {% endif %}
+                        <br>
+                        <span style="font-size: 1em;font-family: 'Oxygen', sans-serif;">{{paper.1}}</span>
+                        {% if addition_error %}
+                            <div style="font-size: 1em;font-family: 'Oxygen', sans-serif;color: red;">{{addition_error}}</div>
+                        {% endif %}
+                    </td>
+                        
+                    <td style="vertical-align: middle;font-size:1.2em;font-family: 'Raleway', sans-serif;">{{paper.4}}</td>
+                    <td style="vertical-align: middle;text-align: center; font-size:1.2em;font-family: 'Raleway', sans-serif;">
+                    
+                    {%if added_flag %}
+                        {% if paper_sucessflag %}
+                            <img src="http://www.clipartbest.com/cliparts/niB/XqX/niBXqXrXT.png" style="height:20px;width:20px;">
+                        {% else %}                        
+                            <img src="http://www.clker.com/cliparts/a/6/e/8/119498563188281957tasto_8_architetto_franc_01.svg.med.png" style="height:20px;width:20px;">
+                        {% endif %}
+                    {% else %}
+                        <input type="checkbox" name="selected_papers" value="{{forloop.counter}}">
+                    {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% if not added_flag %}
+            <button type="submit" class="btn btn-primary" style="width:300px;float:right;font-family: 'Raleway', sans-serif;font-size:20px;height:40px;margin-top:20px;">Import the selected papers</button>
+            {%endif%}
+        </form>
+    {%endif%}
+</div>
+</div>
+
+
+
+  </body>
+</html>
+{% endblock %}

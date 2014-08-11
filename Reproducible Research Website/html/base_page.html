@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--<link rel="shortcut icon" href="./bootstrap/docs-assets/ico/favicon.png"> -->
+    <link rel="shortcut icon" href="./bootstrap/docs-assets/ico/logo.png">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Oxygen:300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>      
+    <title>LCAV Reproducible Research Repository</title>
+
+    <!--===============================================================================-->
+    <!--================================CSS STYLINGS===================================-->    
+    
+    <link rel="stylesheet" href="./css/TableBarChart.css" />
+    
+    <!------------------------------Bootstrap core CSS----------------------------------->    
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <!--<link href="./css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="./css/bootstrap-responsive.css" rel="stylesheet">
+    <!-- <link href="./bootstrap/dist/css/bootstrap.css" rel="stylesheet"> -->	  
+    <!----------------------------------------------------------------------------------->
+        
+    <!---------------------Bootstrap Time and Date Picker CSS --------------------------->    
+    <link href="./css/prettify.css" type="text/css" rel="stylesheet">
+    <!--<link type="text/css" href="./css/bootstrap-timepicker.css" rel="stylesheet">-->
+    <link type="text/css" href="./css/bootstrap-timepicker.min.css" rel="stylesheet">
+    <link href="./css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="./css/datepicker.css" rel="stylesheet">
+    <!----------------------------------------------------------------------------------->
+    
+    
+    <!-----------------------------------Carousel---------------------------------------->
+    <link href="./css/carousel.css" rel="stylesheet">
+    <!----------------------------------------------------------------------------------->
+    
+    <!----------------------------------Define Custom Logos------------------------------>
+    <style>
+      .icon-github {
+	  background-image: url("http://i2.wp.com/wrongsideofmemphis.files.wordpress.com/2012/11/github-logo-the-octocat.png?resize=40%2C40");
+	  background-position: center center;
+	  width:30px;
+	  height:30px;	  
+	  margin-right:10px;
+      }
+      .icon-youtube {
+	  background-image: url("http://www.yuvsoft.com/wp-content/uploads/2013/02/Tube_icon.png");
+	  background-position: center center;
+	  width:30px;
+	  height:30px;	  
+	  margin-right:10px;
+      }
+      
+    </style>
+    <!----------------------------------------------------------------------------------->
+    
+    <!--===============================================================================-->
+    
+    <!--===============================================================================-->
+    <!--================================JAVA SCRIPTS===================================-->
+        
+    
+    <!-----HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries----->
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="./bootstrap/docs-assets/js/html5shiv.js"></script>
+    <!----------------------------------------------------------------------------------->
+     
+    <!-----------------------------------jQuery------------------------------------------>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <!----------------------------------------------------------------------------------->
+    
+    
+    <!----------------------------------Moment.js---------------------------------------->    
+    <script src="./js/moment.js"></script>
+    <!----------------------------------------------------------------------------------->
+    
+    <!---------------------Bootstrap Time and Date Picker CSS --------------------------->
+    <script src="./js/bootstrap-datepicker.js"></script>
+    <script src="./js/bootstrap-timepicker.min.js"></script>
+    <!----------------------------------------------------------------------------------->
+    
+    <!------------------------------Bootstrap core JS------------------------------------>    
+    <script type="text/javascript" src="./js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./bootstrap/docs-assets/js/respond.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap-collapse.js"></script>
+    <script type="text/javascript" src="./js/bootstrap-collapse-min.js"></script>
+    <!--<script type="text/javascript" src="./bootstrap/docs-assets/js/holder.js"></script>-->
+    <!----------------------------------------------------------------------------------->
+    
+    <script type="text/javascript" src="./js/TableBarChart.js"></script>
+    <!--===============================================================================-->
+    
+    
+
+  </head>
+  
+  <!--===============================================================================-->
+  <!--===================================NAVBAR======================================-->
+  <body>
+    {% block navbar %}
+    
+    <div class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+    <!--<div class="navbar">      -->
+      <div class="navbar-inner">
+        <div class="container">
+	  
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          
+	  <a class="brand" href="http://lcav.epfl.ch" style="color:yellow;font-family: 'Raleway', sans-serif;">LCAV</a>
+          <div class="nav-collapse collapse navbar-responsive-collapse">
+            <ul class="nav">	      
+	      <li class={{isactive.0}}><a href="/" style="font-family: 'Raleway', sans-serif;">Home</a></li>
+	      <!-- <li class={{isactive.2}}><a href="/_subject" style="font-family: 'Raleway', sans-serif;">Browse by Subject</a></li> -->
+	      <li class={{isactive.1}}><a href="/_publicationyear" style="font-family: 'Raleway', sans-serif;">Browse by Year</a></li>
+	      {% if userid%}
+		<!--<li class={{isactive.3}}><a href="/_favourties?u={{userid}}" style="font-family: 'Raleway', sans-serif;">My Favourites</a></li>-->
+		{% if newmessage %}
+		  <li class={{isactive.4}}><a href="/message_inbox"><span class="fa-stack fa-lg" style="margin-top:-12px;margin-right:-5px;"> <i class="fa fa-envelope fa-stack-1x" ></i><i style="color:red;margin-top:-15px;margin-left:17px;" class="fa fa-bell fa-stack"></i></span></a></li>
+		{% else %}
+		  <li class={{isactive.4}}><a href="/message_inbox"><i style="margin-right:-15px;" class="fa fa-envelope fa-1x" ></i></a></li>
+		{% endif %}
+	      
+		
+	      {% endif %}
+	      
+	      <li>
+		
+	      </li>
+	      
+	    </ul>
+              	
+            <!--
+	    <form class="navbar-search pull-left" action="">
+	      <input type="text" class="search-query span2" placeholder="Search">
+	    </form>
+	    -->
+            <ul class="nav pull-right"style="padding-right: 20px;" >
+	      {% if userid%}
+		{% if chef_flag%}			      
+		  <li><a href="/_chef?u={{userid}}" style="font-family: 'Raleway', sans-serif;">My collection</a></li>
+		  <li class="divider-vertical></li>
+		{% else %}
+		  <li><a href="/newpost" style="font-family: 'Raleway', sans-serif;">Submit a paper!</a></li>
+		{% endif %}
+	      {% endif %}	
+              <li class="dropdown">
+	      {% if userid%}
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown"  >{{userid}} <b class="caret"></b></a>		
+	      	<ul class="dropdown-menu">
+	          <li><a href="/dashboard" style="font-family: 'Raleway', sans-serif;">My dashboard</a></li>
+		  <li><a href="/_showprofile" style="font-family: 'Raleway', sans-serif;">My profile</a></li>
+		  {% if chef_flag%}
+		    <li class="divider"></li>			  
+		    <li><a href="/newpost" style="font-family: 'Raleway', sans-serif;">Offer new meal</a></li>		  		
+		  {% endif %}
+	    	  <li class="divider"></li>			  
+		  <li><a href="/logout" style="font-family: 'Raleway', sans-serif;">Logout</a></li>
+	      	</ul>
+		
+		
+	      {% else %}
+		  <li><a href="/login" style="font-family: 'Raleway', sans-serif;">Sign in</a></li>
+		  
+		  <!--
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" >Sign in<b class="caret"></b></a>
+		  <ul class="dropdown-menu">
+		    <li><a href="/login">Sign in</a></li>					
+		    <li class="divider"></li>
+		    <li class="dropdown-header">Or...</li>
+		    <li><a href="/signup">Signup</a></li>					
+		  </ul>
+		  -->
+		{% endif %} 
+              </li>
+            </ul>
+          </div><!-- /.nav-collapse -->
+        </div>
+      </div><!-- /navbar-inner -->
+    </div>
+    </div>
+    <!--===============================================================================-->
+    
+    
+    
+    {% block content %}{% endblock %}
+    
+
+
+ <!-- FOOTER -->
+ <div class="container" style="margin-top:100px;">
+      <footer>
+        <p class="pull-right">
+	  {% if editpaper_link %}
+	    <a href={{editpaper_link}}>Edit this record</a>
+	  {% else %}
+	    <a href="#">Back to top</a>
+	  {% endif %}
+	</p>
+        <p>&copy; 2014 <a href="lcav.epfl.ch">LCAV</a>, EPFL &middot; <a href="/about">About Us</a> &middot; <a href="/Privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; <a href="/contacts">Contact Us</a></p>
+      </footer>
+
+    </div><!-- /.container -->
+    
+    
+        {% endblock %}
+  

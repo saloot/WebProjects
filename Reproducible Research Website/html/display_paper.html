@@ -1,0 +1,167 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+    
+
+    
+    
+<div class="container marketing" style="margin-left:15%;width:80%">    
+    <div style="margin:110px auto 0px -40px;width:80%;">            
+        <h1 style="font-family: 'Varela Round', sans-serif; font-size: 2.5em;margin-left: 0px;"><a href={{paper.11}}>{{paper.0}}</a></h1>
+    </div>    
+    <div style="margin-top:-50px;;width:15%;float:right;">
+        <p style="font-family: 'Raleway', sans-serif; font-size: 2em;">{{paper.1}}</p>
+    </div>
+    
+    <div class="row" style="float: left;width:88%;padding-right: 100px;margin-bottom: 10px;">                
+        <div style="font-family: 'font-family: 'Raleway', sans-serif;: 1.3em;margin-bottom: 30px;">
+            {% for author in author_list %}
+            <span style="font-family: 'Varela Round', sans-serif; font-size: 1.3em;" ><a href="/_author?a={{author.1}}">{{author.0}}</a></span>
+            {% if forloop.counter < author_list|length %}
+                <span>&</span>
+            {% endif %}
+            {% endfor %}
+        </div>
+        
+        {% if paper.2 %}
+        <div style="font-family: 'font-family: 'Raleway', sans-serif; font-size: 1.2em;">
+            <h2 style="font-family: 'Varela Round', sans-serif; font-size: 1em;" ><i>{{paper.2}}</i></h2>
+        </div>
+        {% endif %}
+
+    </div>
+
+
+    <div class="container marketing" style="width:70%;float:left;">
+        <div class="row">
+            <p style="text-align: justify;ont-family: 'Varela Round', sans-serif; font-size: 1.2em">{{paper_abstract}}</p>
+          </div>
+    </div>
+    
+        
+    <div class="container marketing" style="margin-left:5%;width:20%;float:right;">
+        
+        {% if paper.6 %}
+        <a href="_pdf_counter?k={{key}}">
+            <button type="submit" class="btn btn-primary btn-large"  style="width:150px;
+                            margin-bottom:20px;text-align: center;font-size: 1em;
+                            border-radius: 4px;">
+                            Download PDF
+            </button>
+        </a>
+        {% endif %}
+        
+        {% if paper.8 %}
+        <a href="_code_counter?k={{key}}">
+            <button type="submit" class="btn btn-default btn-large" style="width:150px;
+                            margin-bottom:20px;text-align: center;font-size: 1em;
+                            border-radius: 4px;padding-top: 12px;">
+                            <i class="icon-github" style="margin-top:-8px;"></i> Code
+            </button>
+        </a>
+        {% endif %}
+        
+        {% if paper.7 %}
+        <a href="_data_counter?k={{key}}">
+            <button type="submit" class="btn btn-warning btn-large" style="width:150px;
+                            margin-bottom:20px;text-align: center;font-size: 1em;
+                            border-radius: 4px;">
+                            Download Data
+            </button>
+        </a>
+        {% endif %}
+    
+        {% if paper.9 %}
+        <a href="_demo_counter?k={{key}}">
+            <button type="submit" class="btn btn-success btn-large" style="width:150px;
+                            margin-bottom:20px;text-align: center;font-size: 1em;
+                            border-radius: 4px;">
+                            <!--<i class="icon-youtube" style="margin-top:-8px;"></i> --> Demo
+            </button>
+        </a>
+    {% endif %}
+    {% if paper.10 %}        
+            <button data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-large" style="width:150px;
+                            margin-bottom:20px;text-align: center;font-size: 1em;
+                            border-radius: 4px;">
+                            Cite this paper
+            </button>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">How to cite this paper:</h4>
+                            <div class="modal-body">
+                                {{paper.10}}
+                            </div>
+                            <div class="modal-footer">
+        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+    {% endif %}
+    </div>
+    
+    <div class="container marketing" style="margin-left:75%;width:20%;margin-top: 20px;">
+    <div id="target"  style="width: 100%; height: 400px;">
+    </div>
+        
+    <table id="source" hidden>	
+        <thead>
+	    <tr>
+                <th></th>
+		<th>Paper Stats</th>
+	    </tr>
+	</thead>
+	<tbody>
+            
+	<tr>
+	    <th>Views</th>                                
+	    <td>{{no_views}}</td>				
+	</tr>
+	<tr>
+	    <th>PDF Downloads</th>				
+	    <td>{{no_pdf_downloads}}</td>
+	</tr>
+        {% if paper.8 %}
+	    <tr>
+		<th>Code Downloads</th>
+		<td>{{no_code_downloads}}</td>
+	    </tr>
+        {% endif %}
+        
+        {% if paper.9 %}
+	    <tr>
+		<th>Demo Downloads</th>
+		<td>{{no_demo_downloads}}</td>
+            </tr>
+        {% endif %}
+    	</tbody>
+    </table>
+    </div>
+    
+    
+    {% if youtube_demo %}
+        <div class="row" style="width:80%;padding-right: 100px;margin-bottom: 10px;">
+            <iframe width="560" height="315" src="//www.youtube.com/embed/{{youtube_demo}}" frameborder="0" allowfullscreen></iframe>
+        </div>
+    {% endif %}
+</div>    
+    
+        
+    <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $('#source').tableBarChart('#target', '', false);
+    });
+    </script>
+    <script>
+        $('#modal-question').modal('show');
+    </script>
+  </body>
+</html>
+{% endblock %}>
+
