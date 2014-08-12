@@ -13,6 +13,9 @@ from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.api import images
 from google.appengine.api import search
 
+import logging
+import traceback
+
 class EditPaperHandler(webapp2.RequestHandler):
     
     def get(self):
@@ -238,6 +241,7 @@ class EditPaperHandler(webapp2.RequestHandler):
                 self.redirect('/login')        
             
             #------------------------------Update Paper Details-----------------------------
+            success_flag = 1
             paper.title = paper_title
             paper.publication_type = publication_type   
             paper.publication_date = publication_date
@@ -245,36 +249,69 @@ class EditPaperHandler(webapp2.RequestHandler):
             paper.keywords = paper_keywords.split(';')
             paper.biblio_str = biblio_str
             if web_link:
-                paper.web_link = web_link
+                try:
+                    paper.web_link = web_link
+                except:
+                    success_flag = 0
+                    logging.error("Invalid web link when editing papr")                                        
+                    params_html['error_web_link'] = 'Invalid link format'
+                    
             if pdf_link:
-                paper.pdf_link = pdf_link
+                try:
+                    paper.pdf_link = pdf_link
+                except:
+                    success_flag = 0
+                    logging.error("Invalid PDF link when editing papr")                                        
+                    params_html['error_pdf_link'] = 'Invalid link format'
+                
             
-            if code_link:
-                paper.code_link = code_link
+            if code_link:                
+                try:
+                    paper.code_link = code_link
+                except:
+                    success_flag = 0
+                    logging.error("Invalid code link when editing papr")                                        
+                    params_html['error_code_link'] = 'Invalid link format'
             else:
                 paper.code_link = None
-            if demo_link:
-                paper.demo_link = demo_link
+            
+            if demo_link:                
+                try:
+                    paper.demo_link = demo_link
+                except:
+                    success_flag = 0
+                    logging.error("Invalid demo link when editing papr")                                        
+                    params_html['error_demo_link'] = 'Invalid link format'
             else:
                 paper.demo_link = None
-            if data_link:    
-                paper.data_link = data_link
+            
+            if data_link:                    
+                try:
+                    paper.data_link = data_link
+                except:
+                    success_flag = 0
+                    logging.error("Invalid data link when editing papr")                                        
+                    params_html['error_data_link'] = 'Invalid link format'
             else:
                 paper.data_link = None
-                
-            paper.publication_status = publication_status
-            paper.authors = paper_authors
-            paper.authors_str = '; '.join(paper_authors)
-            paper.email_authors = author_emails
-            paper.put()
-            #---------------------------------------------------------------------
+             
+            if not success_flag:
+                params_html['admin_flag'] = 1
+                self.response.out.write(template.render('./html/edit_paper.html',params_html))
+            else:
+                paper.publication_status = publication_status
+                paper.authors = paper_authors
+                paper.authors_str = '; '.join(paper_authors)
+                paper.email_authors = author_emails
+                paper.put()
+                #---------------------------------------------------------------------
             
-            #--------------------Index the Paper for Future Search Queries----------------------
-            index = search.Index(name='PAPER_INDICES', namespace='PAPER_INDICES_NAMESPACE')
-            key_val = paper.key()
+                #--------------------Index the Paper for Future Search Queries----------------------
+                index = search.Index(name='PAPER_INDICES', namespace='PAPER_INDICES_NAMESPACE')
+                key_val = paper.key()
 
-            key_val = str(key_val).replace('-','_')
-            fields = [search.TextField(name='abstract', value=paper_abstract),
+                key_val = str(key_val).replace('-','_')
+                fields = [search.TextField(name='abstract', value=paper_abstract),
                         search.TextField(name='doc_id', value=key_val),
                         #search.DateField(name='publication_date',value=datetime.datetime.now().date()),
                         search.TextField(name='title', value=paper_title),
@@ -286,67 +323,67 @@ class EditPaperHandler(webapp2.RequestHandler):
                         search.NumberField(name='pub_year', value=int(paper.publication_year)),
                         search.TextField(name='dockey', value=str(paper.key()))]
                 
-            d = search.Document(doc_id=key_val, fields=fields)
-            try:
-                add_result = search.Index(name='PAPER_INDICES').put(d)
+                d = search.Document(doc_id=key_val, fields=fields)
+                try:
+                    add_result = search.Index(name='PAPER_INDICES').put(d)
                 
-            except search.Error:
-                self.response.out.write("Sorry we weren't able to add this!")
+                except search.Error:
+                    self.response.out.write("Sorry we weren't able to add this!")
                 #-----------------------------------------------------------------------------------
 
             
             
-            #-----------------Add or Update the Author to the Authors Database------------------
-            itr = 0
-            author_emails = paper.email_authors
-            
-            for author in paper.authors:
-                authorID = str(author.replace(" ", ""))
-                authorID = authorID.replace(",","")
-                email = author_emails[itr]
+                #-----------------Add or Update the Author to the Authors Database------------------
+                itr = 0
+                author_emails = paper.email_authors
                 
-                user = db.GqlQuery("SELECT * FROM Authors_DB WHERE author_id = '%s'" %authorID)
-                user = user.get()
+                for author in paper.authors:
+                    authorID = str(author.replace(" ", ""))
+                    authorID = authorID.replace(",","")
+                    email = author_emails[itr]
                 
-                if user:
+                    user = db.GqlQuery("SELECT * FROM Authors_DB WHERE author_id = '%s'" %authorID)
+                    user = user.get()
+                
+                    if user:
                     
-                    #............................Update the Author..............................
-                    published_papers = user.paper_keys
-                    if str(paper.key()) not in str(published_papers):
-                        published_papers.append(str(paper.key()))
-                        user.paper_keys = published_papers
+                        #............................Update the Author..............................
+                        published_papers = user.paper_keys
+                        if str(paper.key()) not in str(published_papers):
+                            published_papers.append(str(paper.key()))
+                            user.paper_keys = published_papers
+                            
+                            titles = user.paper_titles
+                            titles.append(str((paper.title)))
+                            user.paper_titles = titles
                         
-                        titles = user.paper_titles
-                        titles.append(str((paper.title)))
-                        user.paper_titles = titles
-                        
-                        dates = user.paper_dates
-                        dates.append(str(paper.publication_year))
-                        user.paper_dates = dates
+                            dates = user.paper_dates
+                            dates.append(str(paper.publication_year))
+                            user.paper_dates = dates
                         
                         
-                        authors_str = user.other_authors
-                        authors_str.append(paper.authors_str)
-                        user.other_authors = authors_str
-                    user.email_add = email
-                    user.put()
+                            authors_str = user.other_authors
+                            authors_str.append(paper.authors_str)
+                            user.other_authors = authors_str
+                        user.email_add = email
+                        user.put()
                     #...........................................................................
         
-                else:
-                    #.....................Add the Author to the Database........................
-                    ind = author.find(",")
-                    first_name = author[0:ind]
-                    last_name = author[ind+2:len(author)]
+                    else:
+                        #.....................Add the Author to the Database........................
+                        ind = author.find(",")
+                        first_name = author[0:ind]
+                        last_name = author[ind+2:len(author)]
                     
-                    u = Authors_DB(author_id = authorID,firstname = first_name, lastname = last_name,email_add = email,
-                                   paper_keys = list([str(paper.key())]),paper_titles = list([str(paper.title)]),
-                                   paper_dates = list([str(paper.publication_year)]),other_authors = list([paper.authors_str]))
-                    u.put()
-                    #...........................................................................
+                        u = Authors_DB(author_id = authorID,firstname = first_name, lastname = last_name,email_add = email,
+                                       paper_keys = list([str(paper.key())]),paper_titles = list([str(paper.title)]),
+                                       paper_dates = list([str(paper.publication_year)]),other_authors = list([paper.authors_str]))
+                        u.put()
+                        #...........................................................................
 
-                itr = itr + 1
-                #-----------------------------------------------------------------------------------
+                    itr = itr + 1
+                    #-----------------------------------------------------------------------------------
+                
+                perma_link=('./_paper?i=%s' %str(paper.key()))
             
-            perma_link=('./_paper?i=%s' %str(paper.key()))
-            
-            self.redirect('/%s' %perma_link)
+                self.redirect('/%s' %perma_link)

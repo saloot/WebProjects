@@ -7,6 +7,7 @@
     
 <div class="container marketing">
     {% if is_author %}
+	{% if popular_papers_no_view%}
         <div style="width:48%;float:right;">
             <h2 style="font-family: 'Raleway', sans-serif; font-size: 2em;"><span style="font-size: .75em">Here are your most popular papers</span></h2>
             <h4 style="font-family: 'Raleway', sans-serif;font-size: 0.85em;">Sort based on: <a href="/dashboard?v=views">Views</a>|<a href="/dashboard?v=pdf">PDF Downloads</a>|<a href="/dashboard?v=code">Code Downloads</a>|<a href="/dashboard?v=data">Data Downloads</a>|<a href="/dashboard?v=demo">Demo Views</a></h4>
@@ -43,8 +44,26 @@
             </table>        
             
         </div>
-        
+	{% else %}
+        <div style="width:40%;float:right;">
+            <h2 style="font-family: 'Raleway', sans-serif; font-size: 2em;"><span style="font-size: .75em">Here are the most popular papers</span></h2>            
+            <table class="table table">
+                {% for paper in recently_added_papers%}
+                    <tr>
+                        <td style="vertical-align: middle;font-size: 1.2em;">
+                            <a href="/_paper?i={{paper.2}}" style="font-family: 'Varela Round', sans-serif;">{{paper.0|safe}}</a>
+                        	<br>
+                            <span style="font-size: 0.75em;font-family: 'Oxygen', sans-serif;">{{paper.3}}</span>
+                        </td>
+                        <td style="vertical-align: middle;font-size:1em;font-family: 'Raleway', sans-serif;">{{paper.1}}</td>
+                    </tr>
+                {% endfor %}
+            </table>        
+            
+        </div>
+	{% endif %}
         <div style="width:40%;">
+	    {% if recently_authored_papers %}
             <h2 style="font-family: 'Raleway', sans-serif; font-size: 2em;"><span style="font-size: .75em">Here are your recently added papers</span></h2>
             <h4 style="font-family: 'Raleway', sans-serif;font-size: 0.85em;"> &nbsp;</h4>
             <table class="table table">                
@@ -59,10 +78,26 @@
                     </tr>
                 {% endfor %}
             </table>
-            <h4 style="font-family: 'Raleway', sans-serif;">To see a complete list click <a href="/_author?a={{is_author}}">here</a>.</h4>            
+            <h4 style="font-family: 'Raleway', sans-serif;">To see a complete list click <a href="/_author?a={{is_author}}">here</a>.</h4>
+	    {% else %}
+	    <h2 style="font-family: 'Raleway', sans-serif; font-size: 2em;"><span style="font-size: .75em">Here are the latest additions to our database</span></h2>            
+            <table class="table table">
+                {% for paper in recently_added_papers%}
+                    <tr>
+                        <td style="vertical-align: middle;font-size: 1.2em;">
+                            <a href="/_paper?i={{paper.2}}" style="font-family: 'Varela Round', sans-serif;">{{paper.0|safe}}</a>
+                        	<br>
+                            <span style="font-size: 0.75em;font-family: 'Oxygen', sans-serif;">{{paper.3}}</span>
+                        </td>
+                        <td style="vertical-align: middle;font-size:1em;font-family: 'Raleway', sans-serif;">{{paper.1}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+	    {% endif %}
         </div>
         
         
+	{% if popular_papers_no_view %}
         <div id="target" style="width: 90%; height: 600px;margin-top: 110px;">
         </div>
         
@@ -104,9 +139,10 @@
 			</tr>
 		</tbody>
 	</table>
+	{% endif %}
         
     {% else %}
-                <div style="width:40%;float:right;">
+            <div style="width:40%;float:right;">
             <h2 style="font-family: 'Raleway', sans-serif; font-size: 2em;"><span style="font-size: .75em">Here are the most popular papers</span></h2>            
             <table class="table table">
                 {% for paper in recently_added_papers%}

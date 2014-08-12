@@ -15,7 +15,7 @@ class SignUpHandler(webapp2.RequestHandler):
 
     def post(self):           
         params_html = {}
-        user_flag = valid_name(self.request.get('username'))
+        user_flag = valid_email(self.request.get('username'))
         password_flag = valid_pass(self.request.get('password'))
         password_verify_flag = valid_pass(self.request.get('verify'))
         original_url = self.request.get('original_url')                
@@ -57,7 +57,7 @@ class SignUpHandler(webapp2.RequestHandler):
             hashed_val = make_hashed_cookie(user_name)
             self.response.headers.add_header('Set-Cookie','user_id=%s' % str(hashed_val))
             q = UserPass_User(user_id = user_name.lower(),user_pass = make_hashed_pw(user_name.lower(),
-            user_password),isadmin=0)
+            user_password),isadmin=0,user_email=user_name.lower())
             q.put()
             time.sleep(2)
             

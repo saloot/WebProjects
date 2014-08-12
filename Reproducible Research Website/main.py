@@ -59,6 +59,9 @@ from handlers.code_counter_handler import CodeCounterHandler
 from handlers.demo_counter_handler import DemoCounterHandler
 from handlers.data_counter_handler import DataCounterHandler
 from handlers.change_pass_handler import ChangePasswordHandler
+from handlers.forgot_password_handler import ForgotPasswordHandler
+from handlers.reset_password_handler import ResetPassHandler
+
 from google.appengine.api import search
 
 from utils import *
@@ -252,7 +255,9 @@ app = webapp2.WSGIApplication([
     ('/_pdf_counter',PDFCounterHandler),
     ('/_code_counter',CodeCounterHandler),
     ('/_demo_counter',DemoCounterHandler),
-    ('/_data_counter',DataCounterHandler),    
+    ('/_data_counter',DataCounterHandler),
+    ('/_forgotpassword',ForgotPasswordHandler),
+    ('/_resetpassword',ResetPassHandler),
     ('/([a-zA-Z0-9]+.json)/?', DisplayPostHandler_JSON)
 ], debug=True)
 

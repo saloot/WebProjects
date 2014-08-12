@@ -24,7 +24,7 @@ class LoginHandler(webapp2.RequestHandler):
             
 
     def post(self): 
-        user_flag = valid_name(self.request.get('username'))
+        user_flag = valid_email(self.request.get('username'))
         password_flag = valid_pass(self.request.get('password'))
         remember_me_flag = self.request.get('remember_me_box')
         return_url = str(self.request.get('original_url'))
@@ -79,7 +79,10 @@ class LoginHandler(webapp2.RequestHandler):
                 self.response.headers.add_header('Set-Cookie','user_id=%s' % str(hashed_val))
             
             if return_url:
-                self.redirect(return_url)
+                if '_resetpassword' in return_url:
+                    self.redirect('/dashboard')
+                else:
+                    self.redirect(return_url)
             else:
                 self.redirect('/dashboard')
                 

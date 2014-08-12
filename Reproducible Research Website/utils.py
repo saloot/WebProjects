@@ -11,7 +11,7 @@ import urllib
 import re
 
 SECRET = "soghrat"
-home_site = "http://madeatmyhome.appspot.com"
+home_site = "http://lcavreproducibleresearch.appspot.com"
 #home_site = "http://localhost:8083"
 COOKIE_RE = re.compile(r'.+=;\s+Path=/')
 def valid_cookie(cookie):

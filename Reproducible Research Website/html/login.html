@@ -9,7 +9,7 @@
 			<div class="control-group">
 				<label class="control-label" for="inputEmail" style="font-family: 'Raleway', sans-serif;">Username</label>
 				<div class="controls">
-					<input type="text" name="username" id="inputEmail" placeholder="Username" value="{{username_value}}">
+					<input type="text" name="username" id="inputEmail" placeholder="user@example.com" value="{{username_value}}">
 					<label style="display: inline-block;color:red;margin-left:5px;font-size:16px;">{{error_username}}</label>
 				</div>
 				
@@ -21,6 +21,12 @@
 					<label style="display: inline-block;color:red;margin-left:5px;font-size:16px;">{{error_password}}</label>
 				</div>
 			</div>
+			<div class="control-group">
+				<div class="controls">
+				<label style="font-family: 'Raleway', sans-serif;">Forgot your password? Click <a href="/_forgotpassword">here!</a></label>
+				</div>
+			</div>
+			
 			<div class="control-group">
 				<div class="controls">
 					<label class="checkbox">
@@ -40,9 +46,9 @@
 	<h3 style="font-family: 'Varela Round', sans-serif;margin-left:60px;margin-bottom: 40px;">Not a user yet? Signup!</h3>
 		<form class="form-horizontal" method="post" action="signup?u=user" style="margin-top: -20px;">
 			<div class="control-group">
-				<label class="control-label" for="inputEmail" style="font-family: 'Raleway', sans-serif;">Select a Username</label>
+				<label class="control-label" for="inputEmail" style="font-family: 'Raleway', sans-serif;">Your email</label>
 				<div class="controls">
-					<input type="text" name="username" id="inputEmail" placeholder="Username" value="{{username_value_signup}}">
+					<input type="text" name="username" id="inputEmail" placeholder="user@example.com" value="{{username_value_signup}}">
 						<div>
 							<label style="display: inline-block;color:red;margin-left:5px;font-size:16px;">{{error_username_signup}}</label>
 						</div>

@@ -13,6 +13,7 @@ from google.appengine.api import images
 from google.appengine.ext.webapp import template
 from google.appengine.ext import db
 from dbs.databases import UserPass_User
+from dbs.databases import Authors_DB
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.api import images
@@ -162,7 +163,7 @@ class EditProfileHandler(webapp2.RequestHandler):
                 l.photo = user_image
             
             
-            l.put()
+            
             
             show_profile_flag = 1
             if name_updated:
@@ -174,8 +175,17 @@ class EditProfileHandler(webapp2.RequestHandler):
                     params_html['ask_author_question'] = 1
                     params_html['author_ID'] = authorID
                     show_profile_flag = 0
+                else:                    
+                    #.....................Add a blank Author to the Database........................                    
+                    u = Authors_DB(author_id = authorID,firstname = user_first_name, lastname = user_last_name,email_add = user_email,
+                                       paper_keys = list([]),paper_titles = list([]),
+                                       paper_dates = list([]),other_authors = list([]))
+                    u.put()
+                    
+                    l.author_id = authorID                                            
+                    #...........................................................................
                 
-                
+            l.put()    
                 
             
             if isauthor:
