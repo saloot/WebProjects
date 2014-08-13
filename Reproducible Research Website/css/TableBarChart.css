@@ -2,12 +2,12 @@
 	display: block;
 	text-align: center;
 	font-weight: bold;
-	height: 40px;
+	height: 40px;	
 }
 
 .graph {
 	position: relative;
-	float: right;
+	float: right;	
 }
 
 .graph ul {
@@ -47,12 +47,13 @@
    bottom: 0;
    color: #555;
    position: absolute;
-   text-align: center;
+   text-align: center;   
 }
 
 .x-axis li {
    float: left;
    margin: 0 10px;
+   margin-top:12px;
 }
 
 .y-axis {

@@ -20,7 +20,7 @@ handlers:
   static_dir: js
 
 - url: /bootstrap/
-  static_dir: bootstrap
+  static_dir: bootstrapped
 
 
  

@@ -64,7 +64,7 @@ class SearchHandler(webapp2.RequestHandler):
         search_query = unescape_html(self.request.get('q'))
         
         try:
-            index = search.Index('PAPER_INDICES')
+            index = search.Index('PAPERS_INDEX')
             query = search.Query(query_string=search_query,options=search.QueryOptions(limit=20))
             search_results = index.search(query)
             number_found = search_results.number_found

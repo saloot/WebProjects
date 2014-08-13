@@ -80,7 +80,7 @@ class DisplayPaperHandler(webapp2.RequestHandler):
             params_html['author_list'] = zip(paper.authors,authors_links)
             params_html['paper_abstract'] = unescape_html(paper.abstract)
             params_html['no_views'] = paper.no_views
-            params_html['no_pdf_downloads'] = paper.no_pdf_downloads
+            params_html['no_pdf_downloads'] = paper.no_pdf_downloads            
             params_html['no_code_downloads'] = paper.no_code_downloads
             params_html['no_demo_downloads'] = paper.no_demo_downloads
             params_html['no_data_downloads'] = paper.no_data_downloads

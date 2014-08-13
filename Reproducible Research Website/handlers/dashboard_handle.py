@@ -23,6 +23,18 @@ class DashboardHandler(webapp2.RequestHandler):
                 if l:
                     admin_flag = l.isadmin
                     author_flag = l.author_id
+                    if (l.firstname or l.lastname):                        
+                        if l.firstname:
+                            welcome_id = l.firstname
+                        if l.lastname:
+                            if welcome_id:
+                                welcome_id = welcome_id + ' ' + l.lastname
+                            else:
+                                welcome_id = l.lastname
+                        params_html['welcome_id'] = welcome_id
+                    else:
+                        ind = find(userid,'@')                        
+                        params_html['welcome_id'] = userid[0:ind]
                 else:
                     self.redirect('/login')
                     

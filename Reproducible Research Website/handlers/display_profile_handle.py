@@ -24,6 +24,7 @@ class DisplayProfileHandler(webapp2.RequestHandler):
         params_html = {}                                # The list of parametersthat will be passed to the html template
         admin_flag = 0
         temp = self.request.cookies.get('user_id')              # Check if the user has signed in
+        import_flag = self.request.get('i')
         if temp:
             userid = valid_hash_cookie(temp)
             if userid:
@@ -35,8 +36,14 @@ class DisplayProfileHandler(webapp2.RequestHandler):
                 params_html['profile_edited'] = l.created_profile
                 if l.firstname:
                     params_html['first_name_value']= (l.firstname)
+                    user_first_name = l.firstname
+                else:
+                    user_first_name = ''
                 if l.lastname:
                     params_html['last_name_value']= (l.lastname)
+                    user_last_name = l.lastname
+                else:
+                    user_last_name = ''
                 if l.address:
                     params_html['address_value'] = (l.address)
                 if l.user_email:
@@ -55,5 +62,10 @@ class DisplayProfileHandler(webapp2.RequestHandler):
             self.redirect('/login')
         
         params_html['admin_flag'] = admin_flag
+        if import_flag:
+            params_html['import_paper_flag'] = 1
+            params_html['redirect_url'] = '/_import?a=' + str(user_first_name.replace(' ','_')) + '_' + str(user_last_name.replace(' ','_'))
+        else:
+            params_html['import_paper_flag'] = 0
         self.response.out.write(template.render('./html/display_profile_user.html',params_html))            
     #--------------------------------------------------------------------------------             

@@ -25,6 +25,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from dbs.databases import *
 from google.appengine.api import search
+from difflib import SequenceMatcher
 
 import xml.etree.ElementTree as ET
 inf = 100000
@@ -40,8 +41,9 @@ publication_type_match['REPORT'] = 'Report'
 publication_type_match['CHAPTER'] = 'Book Chapter'
 publication_type_match['POSTER'] = 'Poster'
 publication_type_match['TALK'] = 'Presentation'
-publication_type_match['Book'] = 'Book'
-
+publication_type_match['BOOK'] = 'Book'
+publication_type_match['REVIEW'] = 'Report'
+publication_type_match['WORKING'] = 'Draft'
 
 publication_status_match = {}
 publication_status_match['SUBMITTED'] = 'Submitted'
@@ -72,11 +74,20 @@ class ImportHandler(webapp2.RequestHandler):
         
         search_results = []
         search_results_sorted_price = []
-        
+        query_criteria = ''
         paper_title = self.request.get('q')
-        query_criteria = "?p=title%3A" + paper_title.replace('_','%20')
-        query_criteria = query_criteria + "&of=xm&rg=200"
+        if paper_title:
+            query_criteria = "?p=title%3A" + paper_title.replace('_','%20')
         
+        paper_authors = self.request.get('a')
+        if paper_authors:
+            if query_criteria:
+                query_criteria = query_criteria + "+and+author%3A" + paper_authors.replace('_','&nbsp')
+            else:
+                query_criteria = "?p=author%3A" + paper_authors.replace('_','&nbsp')
+            
+        query_criteria = query_criteria + "&of=xm&rg=200"
+        #self.response.out.write(query_criteria)
         url = ("http://infoscience.epfl.ch/search" + query_criteria)
         
         
@@ -295,15 +306,27 @@ class ImportHandler(webapp2.RequestHandler):
                 user = user.get()
                 if user:
                     admin_flag = user.isadmin
+                    adding_user = user
                     
         params_html['admin_flag'] = admin_flag
         #----------------------------------------------------------------------------
 
         search_results = []
         search_results_sorted_price = []
-        
+        match_author_id = 0
+        query_criteria = ''
         paper_title = self.request.get('q')
-        query_criteria = "?p=title%3A" + paper_title.replace('_','%20')
+        if paper_title:
+            query_criteria = "?p=title%3A" + paper_title.replace('_','%20')
+        
+        paper_authors = self.request.get('a')
+        if paper_authors:
+            match_author_id = 1            
+            if query_criteria:
+                query_criteria = query_criteria + "+and+author%3A" + paper_authors.replace('_','&nbsp')
+            else:
+                query_criteria = "?p=author%3A" + paper_authors.replace('_','&nbsp')
+            
         query_criteria = query_criteria + "&of=xm&rg=200"
         
         url = "http://infoscience.epfl.ch/search" + query_criteria    
@@ -424,8 +447,9 @@ class ImportHandler(webapp2.RequestHandler):
                 if (att['tag'] == '973'):
                     for codings in child:
                         d = codings.attrib
-                        if (d['code'] == 's'):
-                            publication_status = codings.text
+                        if (d['code'] == 's'):                             
+                            ky = codings.text
+                            publication_status = publication_status_match[ky]
                         
                         if (d['code'] == 'x'):
                             if (codings.text == 'PUBLIC'):
@@ -542,10 +566,10 @@ class ImportHandler(webapp2.RequestHandler):
                 try:
                     p = Papers_DB(title = paper[0],publication_year = int(paper[4]), publisher = paper[5],keywords = paper[6],
                              authors = paper[7],abstract = paper[2],authors_str = paper[1],
-                             publication_status=paper[10],publication_type = paper[11],biblio_str = paper[13],
+                             publication_status=paper[11],publication_type = paper[12],biblio_str = paper[13],
                              email_authors = paper[16])                    
                 except:
-                    self.response.out.write('salam')
+                    #self.response.out.write('salam')
                     temp_flag = 0
                     stacktrace = traceback.format_exc()
                     logging.error("%s", stacktrace)
@@ -573,8 +597,8 @@ class ImportHandler(webapp2.RequestHandler):
                 
                 p.abstract = paper[2]
                 p.authors_str = paper[1]
-                p.publication_status=paper[10]
-                p.publication_type = paper[11]
+                p.publication_status=paper[11]
+                p.publication_type = paper[12]
                 p.biblio_str = paper[13]
                 p.abstractemail_authors = paper[16]
             
@@ -615,7 +639,7 @@ class ImportHandler(webapp2.RequestHandler):
                     
             #--------------------Index the Paper for Future Search Queries----------------------
             if paper_sucess_flag:
-                index = search.Index(name='PAPER_INDICES', namespace='PAPER_INDICES_NAMESPACE')
+                index = search.Index(name='PAPERS_INDEXES', namespace='PAPER_INDICES_NAMESPACE')
                 key_val = p.key()
 
                 key_val = str(key_val).replace('-','_')
@@ -633,12 +657,37 @@ class ImportHandler(webapp2.RequestHandler):
                 
                 d = search.Document(doc_id=key_val, fields=fields)
                 try:
-                    add_result = search.Index(name='PAPER_INDICES').put(d)
+                    add_result = search.Index(name='PAPERS_INDEXES').put(d)
                     #self.response.out.write('salam')
                 except search.Error:
                     self.response.out.write("Sorry we weren't able to add this!")
             #-----------------------------------------------------------------------------------
                 
+            #-------------------Check if the USerID Matches any of the Authors------------------
+            if match_author_id:
+                if adding_user:
+                    authors_links = []
+                    for item in p.authors:
+                        authorID = item.replace(" ", "")
+                        authorID = authorID.replace(",","")
+                        authors_links.append(authorID)
+                    
+                    if adding_user.author_id not in authors_links:
+                        max_sim = 0
+                        itr = 0
+                        
+                        for item in authors_links:
+                            if (SequenceMatcher(None, adding_user.author_id.lower(), item.lower()).ratio()>max_sim):
+                                ind = itr
+                                max_sim = SequenceMatcher(None, adding_user.author_id.lower(), item.lower()).ratio()
+                                #self.response.out.write(str(max_sim))
+                            itr = itr + 1
+                        if max_sim > 0.85:
+                            adding_user.author_id = authors_links[ind]
+                            adding_user.put()
+                            
+                            
+            #-----------------------------------------------------------------------------------
             #-----------------Add or Update the Author to the Authors Database------------------
             if paper_sucess_flag:
                 authors_list = paper[7]

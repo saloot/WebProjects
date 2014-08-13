@@ -21,6 +21,7 @@ class EditPaperHandler(webapp2.RequestHandler):
     def get(self):
         
         #---------------------Check if the User is Admin---------------------
+        params_html = {}
         admin_flag = 0
         temp = self.request.cookies.get('user_id')
         if temp:
@@ -30,6 +31,7 @@ class EditPaperHandler(webapp2.RequestHandler):
             if user:
                 admin_flag = user.isadmin
                 user_author = user.author_id
+                params_html['userid'] = userid
         #---------------------------------------------------------------------
         
         #----------------Retrieve the Paper from the Database-----------------
@@ -38,10 +40,10 @@ class EditPaperHandler(webapp2.RequestHandler):
         #---------------------------------------------------------------------
         
         #-------------------Assign HTML Template Parameters-------------------        
-        paper_type_list = ['Conference','Journal','Thesis','Poster','Patent','Report','Poster','Book','Book Chapter','Presentation']
+        paper_type_list = ['Conference','Journal','Thesis','Poster','Patent','Report','Poster','Book','Book Chapter','Presentation','Draft']
         publication_status_list = ['Accepted','Submitted','Published']
         
-        params_html = {}
+        
         params_html['paper_type_list'] = paper_type_list
         params_html['initial_paper_type'] = paper.publication_type
         params_html['paper_title_val'] = paper.title
@@ -83,7 +85,7 @@ class EditPaperHandler(webapp2.RequestHandler):
         
     def post(self): 
         params_html = {}  
-        paper_type_list = ['Conference','Journal','Thesis','Poster','Patent','Report','Poster','Book','Book Chapter','Presentation']
+        paper_type_list = ['Conference','Journal','Thesis','Poster','Patent','Report','Poster','Book','Book Chapter','Presentation','Draft']
         publication_status_list = ['Accepted','Submitted','Published']
         
         params_html['paper_type_list'] = paper_type_list
@@ -104,16 +106,27 @@ class EditPaperHandler(webapp2.RequestHandler):
             user = user.get()
             admin_flag = user.isadmin
             user_author = user.author_id
+            params_html['userid'] = userid
         
         params_html['admin_flag'] = admin_flag
         #---------------------------------------------------------------------
         
         #----------------------Get the Details from the Form-------------------
-        paper_title = (self.request.get('paper_title'))        
+        paper_title = (self.request.get('paper_title'))
+        if isinstance(paper_title, str):
+            paper_title = unicode(paper_title,'utf-8')
+        else:
+            paper_title = unicode(paper_title)
+            
         publication_type = self.request.get('publication_type')
         publication_date = self.request.get('publication_date')
         paper_abstract = (self.request.get('abstract_of_paper'))
         paper_keywords = self.request.get('pub_keywords')
+        if isinstance(paper_keywords, str):
+            paper_keywords = unicode(paper_keywords,'utf-8')
+        else:
+            paper_keywords = unicode(paper_keywords)
+                
         biblio_str = self.request.get('how_to_cite')
         web_link = self.request.get('web_link')
         pdf_link = self.request.get('pdf_link')        
@@ -128,6 +141,11 @@ class EditPaperHandler(webapp2.RequestHandler):
         for i in range(1,len(paper.authors)+1):
             field_name = str(i) + "_author"
             temp = self.request.get(field_name)
+            if isinstance(temp, str):
+                temp = unicode(temp,'utf-8')
+            else:
+                temp = unicode(temp)
+            
             paper_authors.append(temp)
             if temp != '':
                 author_count = author_count + 1
@@ -307,7 +325,7 @@ class EditPaperHandler(webapp2.RequestHandler):
                 #---------------------------------------------------------------------
             
                 #--------------------Index the Paper for Future Search Queries----------------------
-                index = search.Index(name='PAPER_INDICES', namespace='PAPER_INDICES_NAMESPACE')
+                index = search.Index(name='PAPERS_INDEXES', namespace='PAPER_INDICES_NAMESPACE')
                 key_val = paper.key()
 
                 key_val = str(key_val).replace('-','_')
@@ -325,7 +343,7 @@ class EditPaperHandler(webapp2.RequestHandler):
                 
                 d = search.Document(doc_id=key_val, fields=fields)
                 try:
-                    add_result = search.Index(name='PAPER_INDICES').put(d)
+                    add_result = search.Index(name='PAPERS_INDEXES').put(d)
                 
                 except search.Error:
                     self.response.out.write("Sorry we weren't able to add this!")
@@ -365,6 +383,7 @@ class EditPaperHandler(webapp2.RequestHandler):
                             authors_str = user.other_authors
                             authors_str.append(paper.authors_str)
                             user.other_authors = authors_str
+                            
                         user.email_add = email
                         user.put()
                     #...........................................................................

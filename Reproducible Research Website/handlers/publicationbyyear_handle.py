@@ -65,6 +65,7 @@ class PublicationByYearHandler(webapp2.RequestHandler):
         params_html['year_index'] = year_index
         params_html['papers_list'] = papers_list
         params_html['admin_flag'] = admin_flag
+        params_html['isactive'] = ["0","active","0"]
         #----------------------------------------------------------------------------
             
         

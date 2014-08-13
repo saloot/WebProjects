@@ -32,7 +32,7 @@ class NewPostHandler(webapp2.RequestHandler):
         else:
             params_new_post['login_first'] = 1
         
-        params_new_post['isactive'] = ["active","0","0"]
+        params_new_post['isactive'] = ["0","0","active"]
         self.response.out.write(template.render('./html/new_post.html',params_new_post))
         
                         

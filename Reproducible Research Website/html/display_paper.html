@@ -86,7 +86,7 @@
                             border-radius: 4px;">
                             Cite this paper
             </button>
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -104,8 +104,16 @@
             </div>
     {% endif %}
     </div>
-    
-    <div class="container marketing" style="margin-left:75%;width:20%;margin-top: 20px;">
+    {% if youtube_demo %}
+        <div class="row" style="width:80%;padding-right: 100px;margin-bottom: 10px;">
+            <iframe width="560" height="315" src="//www.youtube.com/embed/{{youtube_demo}}" frameborder="0" allowfullscreen></iframe>
+        </div>
+    {% endif %}
+    {% if youtube_demo %}
+    <div class="container marketing" style="margin-left:75%;width:20%;margin-top: -320px;">
+    {% else %}
+        <div class="container marketing" style="margin-left:75%;width:20%;margin-top: 20px;">
+    {% endif %}
     <div id="target"  style="width: 100%; height: 400px;">
     </div>
         
@@ -117,38 +125,36 @@
 	    </tr>
 	</thead>
 	<tbody>
-            
-	<tr>
-	    <th>Views</th>                                
-	    <td>{{no_views}}</td>				
-	</tr>
-	<tr>
-	    <th>PDF Downloads</th>				
-	    <td>{{no_pdf_downloads}}</td>
-	</tr>
-        {% if paper.8 %}
-	    <tr>
-		<th>Code Downloads</th>
-		<td>{{no_code_downloads}}</td>
-	    </tr>
-        {% endif %}
-        
-        {% if paper.9 %}
-	    <tr>
-		<th>Demo Downloads</th>
-		<td>{{no_demo_downloads}}</td>
+            {%if no_pdf_downloads %}
+            <tr>
+                <th>PDF Downloads</th>				
+                <td>{{no_pdf_downloads}}</td>
             </tr>
-        {% endif %}
+            {% endif %}
+            <tr>
+                <th>Views</th>                                
+                <td>{{no_views}}</td>				
+            </tr>
+            
+            {% if paper.8 %}
+                <tr>
+                	<th>Code Downloads</th>
+                    <td>{{no_code_downloads}}</td>
+                </tr>
+            {% endif %}
+            
+            {% if paper.9 %}
+                <tr>
+                    <th>Demo Downloads</th>
+                    <td>{{no_demo_downloads}}</td>
+                </tr>
+            {% endif %}
     	</tbody>
     </table>
     </div>
     
     
-    {% if youtube_demo %}
-        <div class="row" style="width:80%;padding-right: 100px;margin-bottom: 10px;">
-            <iframe width="560" height="315" src="//www.youtube.com/embed/{{youtube_demo}}" frameborder="0" allowfullscreen></iframe>
-        </div>
-    {% endif %}
+    
 </div>    
     
         

@@ -1,6 +1,19 @@
 {% extends "base_page.html" %}
 
 {% block content %}
+	{%if import_paper_flag%}
+	<div class="container marketing" style="margin-top:80px;">	
+		<div class="alert alert-info" role="alert">
+			<h3 style="font-family: 'Varela Round', sans-serif;margin-left:0px;margin-bottom: 20px;">Your profile has been successfully created.</h3>			
+		</div>
+		<div class="alert alert-warning" role="alert">
+			<h4 style="font-family: 'Varela Round', sans-serif;margin-left:0px;margin-bottom: 20px;">In a few seconds, you will be redirected to the page to import your publications.</h4>
+		</div>
+		<head>
+		<meta http-equiv="refresh" content="5; url={{redirect_url}}" />
+		</head>
+	</div>
+	{%endif %}
 {% if profile_edited %}
 <div class="container marketing" style="margin-top:80px;">	
 	<div class="span6" style="padding-right:-20px; margin-bottom: 100px;">	
@@ -38,7 +51,7 @@
 			<label class="control-label" style="font-family: 'Oxygen', sans-serif;"><a href="/_author?a={{author_id}}">{{author_id}}</a></label>
 		</div>
 		
-		<div class="control-group" style="height:30px;">
+		<div class="control-group" >
 			<label class="control-label" for="first_name_input" style="font-family: 'Raleway', sans-serif;margin-right: 10px;">Biography</label>
 			<label class="control-label" for="first_name_input" style="font-family: 'Oxygen', sans-serif;">{{biography_value}}</label>
 		</div>

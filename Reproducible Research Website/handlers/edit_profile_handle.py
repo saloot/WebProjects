@@ -18,6 +18,7 @@ from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.api import images
 from google.appengine.api import memcache
+import logging
 #====================================================================================
 
 
@@ -110,7 +111,7 @@ class EditProfileHandler(webapp2.RequestHandler):
         #-Assign HTML Template Parameters in Case we Have to Reload the Signup Page--
         params_html['first_name_value']= str(user_first_name)
         params_html['last_name_value']= str(user_last_name)
-        params_html['postal_address_value'] = str(user_postal_address)
+        params_html['postal_address_value'] = (user_postal_address)
         params_html['web_link_value'] = str(user_weblink)        
         #params_html['email_value'] = str(user_email)        
         params_html['biography_value'] = str(biography)
@@ -148,10 +149,12 @@ class EditProfileHandler(webapp2.RequestHandler):
                 l.lastname = str(user_last_name)
                 name_updated = 1
                 
-            l.address = str(user_postal_address)
+            l.address = (user_postal_address)
             l.user_email = user_email    
             l.biography = str(biography)
             if user_weblink:
+                if 'http://' not in user_weblink:
+                    user_weblink = 'http://' + user_weblink
                 l.webpage_link = user_weblink
             else:
                 l.webpage_link = None
@@ -159,51 +162,67 @@ class EditProfileHandler(webapp2.RequestHandler):
             if user_first_name or user_last_name or user_postal_address or user_email or biography:
                 l.created_profile = 1
             
+            success_flag_upload = 1
             if new_photo_added:
-                l.photo = user_image
+                try:
+                    l.photo = user_image
+                except:
+                    logging.error("Photo is too large")
+                    params_html['error_photo'] = 'Sorry the photo is too large'
+                    success_flag_upload = 0
             
             
-            
-            
-            show_profile_flag = 1
-            if name_updated:
-                author = str(user_first_name) + ' ' + str(user_last_name)
-                authorID = str(author.replace(" ", ""))
-                user = db.GqlQuery("SELECT * FROM Authors_DB WHERE author_id = '%s'" %authorID)
-                user = user.get()
-                if user:
-                    params_html['ask_author_question'] = 1
-                    params_html['author_ID'] = authorID
-                    show_profile_flag = 0
-                else:                    
-                    #.....................Add a blank Author to the Database........................                    
-                    u = Authors_DB(author_id = authorID,firstname = user_first_name, lastname = user_last_name,email_add = user_email,
-                                       paper_keys = list([]),paper_titles = list([]),
-                                       paper_dates = list([]),other_authors = list([]))
-                    u.put()
-                    
-                    l.author_id = authorID                                            
-                    #...........................................................................
-                
-            l.put()    
-                
-            
-            if isauthor:
-                if (isauthor == 'yes'):
+            if success_flag_upload:
+                import_paper_flag = 0
+                show_profile_flag = 1
+                if name_updated:
                     author = str(user_first_name) + ' ' + str(user_last_name)
                     authorID = str(author.replace(" ", ""))
                     user = db.GqlQuery("SELECT * FROM Authors_DB WHERE author_id = '%s'" %authorID)
                     user = user.get()
                     if user:
+                        params_html['ask_author_question'] = 1
                         params_html['author_ID'] = authorID
-                        l.author_id = authorID                        
-                        l.put()
-                        time.sleep(2)
+                        show_profile_flag = 0
+                    else:                    
+                        #.....................Add a blank Author to the Database........................                    
+                        u = Authors_DB(author_id = authorID,firstname = user_first_name, lastname = user_last_name,email_add = user_email,
+                                       paper_keys = list([]),paper_titles = list([]),
+                                       paper_dates = list([]),other_authors = list([]))
+                        u.put()
+                        show_profile_flag = 1
+                        l.author_id = authorID
+                        import_paper_flag = 1                    
+                        #...........................................................................
                     
-                    show_profile_flag = 1
+                try:
+                    l.put()
+                except:
+                    params_html['error_photo'] = 'Sorry the photo is too large'
+                    show_profile_flag = 0
             
-            if show_profile_flag:                
-                self.redirect('/_showprofile')                                       # Redirect the user to the profile page
+                if isauthor:
+                    if (isauthor == 'yes'):
+                        author = str(user_first_name) + ' ' + str(user_last_name)
+                        authorID = str(author.replace(" ", ""))
+                        user = db.GqlQuery("SELECT * FROM Authors_DB WHERE author_id = '%s'" %authorID)
+                        user = user.get()
+                        if user:
+                            params_html['author_ID'] = authorID
+                            l.author_id = authorID                        
+                            l.put()
+                            
+                        show_profile_flag = 1
+            
+                
+                if show_profile_flag:
+                    time.sleep(2)
+                    if import_paper_flag:
+                        self.redirect('/_showprofile?i=import')                             # Redirect the user to the profile page
+                    else:
+                            self.redirect('/_showprofile')                                      # Redirect the user to the profile page
+                else:                
+                    self.response.out.write(template.render('./html/edit_profile_user.html',params_html))
             else:
                 self.response.out.write(template.render('./html/edit_profile_user.html',params_html))
         #----------------------------------------------------------------------------    
